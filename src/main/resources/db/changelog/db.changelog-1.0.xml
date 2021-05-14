@@ -1,0 +1,72 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1" author="cha">
+        <sql>
+            CREATE TABLE user(
+                id BIGINT NOT NULL AUTO_INCREMENT,
+            name VARCHAR(255) NOT NULL,
+            username VARCHAR(255) NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            role VARCHAR(255) NOT NULL,
+
+            CONSTRAINT PK_id PRIMARY KEY(id)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE user;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2" author="cha">
+        <sql>
+            CREATE TABLE product(
+                id BIGINT NOT NULL AUTO_INCREMENT,
+            name VARCHAR(255) NOT NULL,
+            price DOUBLE,
+            explanation VARCHAR(1000),
+
+            CONSTRAINT PK_id PRIMARY KEY(id)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE product;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="3" author="cha">
+        <sql>
+            INSERT INTO product(name,price,explanation) VALUES("Name_1",10.00,"This is one");
+            INSERT INTO product(name,price,explanation) VALUES("Name_2",20.50,"This is two");
+            INSERT INTO product(name,price,explanation) VALUES("Name_3",30.00,"This is three");
+            INSERT INTO product(name,price,explanation) VALUES("Name_4",40.60,"This is four");
+        </sql>
+        <rollback>
+            TRUNCATE TABLE product;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="4" author="cha">
+        <sql>
+            CREATE TABLE transaction(
+                id BIGINT NOT NULL AUTO_INCREMENT,
+            product_id BIGINT NOT NULL,
+            user_id BIGINT NOT NULL,
+            purchase_date DATETIME NOT NULL,
+
+            CONSTRAINT PK_id PRIMARY KEY(id),
+            CONSTRAINT fk_tran_product FOREIGN KEY(product_id) REFERENCES product(id) ON DELETE CASCADE ON UPDATE CASCADE,
+            CONSTRAINT fk_tran_user FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+            );
+        </sql>
+        <rollback>
+            DROP TABLE transaction;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
